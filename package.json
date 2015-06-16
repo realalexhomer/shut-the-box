@@ -1,0 +1,32 @@
+{
+  "name": "shut-the-box",
+  "version": "1.0.0",
+  "description": "Lets you play a game called 'shut the box'.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/realalexhomer/shut-the-box.git"
+  },
+  "author": "Alex Homer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/realalexhomer/shut-the-box/issues"
+  },
+  "homepage": "https://github.com/realalexhomer/shut-the-box#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.8.0",
+    "grunt-contrib-handlebars": "^0.10.2",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-sass": "^1.0.0",
+    "node-bourbon": "^4.2.3",
+    "node-sass": "^3.2.0"
+  },
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "underscore": "^1.8.3"
+  }
+}
