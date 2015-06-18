@@ -1,0 +1,37 @@
+// breakpoints
+   
+$S:     540px;   
+$M:     768px;     
+$L:     960px;     
+
+// media queries
+
+@mixin MQ($canvas) {
+  @if $canvas == S {
+   @media only screen and (min-width: $S) { @content; } 
+  }
+  @else if $canvas == M {
+   @media only screen and (min-width: $M) { @content; } 
+  }
+  @else if $canvas == L {
+   @media only screen and (min-width: $L) { @content; } 
+  }
+}
+
+// centered flex containers
+
+.flex-obj-container {
+  @include display(flex);
+  @include flex-direction(row);
+  @include flex-wrap(wrap);
+  @include align-items(center);
+  @include justify-content(center);
+}
+
+.flex-obj { 
+  border: 1px solid black;
+  @include margin(2px 2px 10px 10px);
+  @include display(flex);
+  @include justify-content(center);
+  @include align-items(center);
+}

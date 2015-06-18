@@ -14,7 +14,7 @@ module.exports = function(grunt) {
       },
 
       dev: {
-        src: 'dev/scripts/*.js',
+        src: ['dev/scripts/*.js', 'dev/scripts/**/*.js'],
         dest: 'dist/bundle.js'
       } 
     },
@@ -32,19 +32,14 @@ module.exports = function(grunt) {
       }
     },
 
-    sass: {                              // Task
-      dist: {                            // Target
-        options: {                       // Target options
-          sourcemap: 'inline'
+    sass: {
+      dist: {
+        options: {
+          sourcemap: 'inline',
+          includePaths: require('node-bourbon').includePaths
         },
-        dist: {
-          files: [{
-          expand: true,
-          cwd: 'dev/styles',
-          src: ['*.scss'],
-          dest: 'dist/styles',
-          ext: '.css'
-          }]
+        files: {
+          'dist/styles/game.css': 'dev/styles/game.scss'
         }
       }
   },
@@ -60,9 +55,8 @@ module.exports = function(grunt) {
   grunt.registerTask('default', []);
   grunt.registerTask('build', ['sass', 'handlebars', 'browserify']);
   grunt.registerTask('serve', ['build', 'watch']);
-}
 
-  // logging
-  //grunt.event.on('watch', function(action, filepath, target) {
- //   grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
- // });
+  grunt.event.on('watch', function(action, filepath, target) {
+    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+  });
+}
