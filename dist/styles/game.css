@@ -75,12 +75,13 @@
   display: block;
   width: 90%;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  margin-top: 30px; }
   @media only screen and (min-width: 540px) {
     .game {
       margin-top: 200px; } }
   .game .cards .card {
-    border: 1px solid black;
+    border: 1px solid;
     width: 50px;
     height: 100px;
     line-height: 100px; }
@@ -89,6 +90,7 @@
         margin: 0px 10px 30px 0px; } }
   .game .dice .die {
     border: 1px solid black;
+    color: black;
     width: 40px;
     height: 40px;
     border-radius: 5px; }
@@ -99,7 +101,17 @@
     padding: 5px;
     margin: 2px; }
 
+.unflipped {
+  color: black;
+  border-color: black;
+  background: white; }
+
 .flipped {
   color: white;
   border-color: white;
   background: black; }
+
+.shut {
+  color: white !important;
+  border-color: white !important;
+  background: grey !important; }

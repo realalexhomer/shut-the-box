@@ -1,8 +1,5 @@
-var $           = require('jquery'),
-    Handlebars  = require('handlebars'),
-    Templates   = require('./Templates')(Handlebars);
-
-Handlebars.partials.game = Templates['dev/templates/partials/game.hbs'];
+var radio = require('radio'),
+    $     = require('jquery');
 
 var gameOptions = {
   numberOfCards: 9,
@@ -10,22 +7,21 @@ var gameOptions = {
   dieSides: 6,
   defSide: 3,
   userName: "Anon"
-}
+};
 
-var game = require('./gameModel')(gameOptions)
+var gameModel = require('./gameModel')(gameOptions),
+    gameView  = require('./gameView')(gameModel);
 
-var mainData = {
-  gameData: {
-    dice: game.dice,
-    cards: game.cards
-  }
-}
+$('document').ready(function(){
 
-console.log(game);
+  gameView.initTurn();
+  
+  radio('rollClick').subscribe(gameModel.rollDice);
+  radio('rolled').subscribe(gameView.updateDice);
+  radio('cardClick').subscribe(gameModel.flipCard);
+  radio('endTurnClick').subscribe(gameModel.checkAnswer);
+  radio('answerChecked').subscribe(gameView.displayAnswer);
+  radio('endTurn').subscribe(gameModel.endTurn);
+  radio('newTurn').subscribe(gameView.initTurn);
 
-game.checkAnswer()
-
-var main = Templates['dev/templates/layouts/main.hbs']
-var html = main(mainData);
-
-$('body').append(html);
+});

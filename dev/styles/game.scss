@@ -7,6 +7,7 @@
   width: 90%;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 30px;
   @include MQ(S){
     margin-top: 200px;
   }
@@ -16,8 +17,7 @@
 
     .card{
       @extend .flex-obj;
-      border: 1px solid $flipped;
-      color: $not-flipped;
+      border: 1px solid;
       width: 50px;
       height: 100px;
       line-height: 100px;
@@ -52,8 +52,20 @@
   }
 }
 
+.unflipped{
+  color: $flipped;
+  border-color: $flipped;
+  background: $not-flipped;
+}
+
 .flipped {
   color: $not-flipped;
   border-color: $not-flipped;
   background: $flipped;
+}
+
+.shut {
+  color : $not-flipped !important;
+  border-color: $not-flipped !important;
+  background: $shut !important;
 }
