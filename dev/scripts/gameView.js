@@ -1,59 +1,94 @@
-$ = require('jquery');
+var $           = require('jquery'),
+    radio       = require('radio'),
+    Handlebars  = require('handlebars'),
+    Templates   = require('./Templates')(Handlebars);
 
-module.exports = function(options){
+var gameLayout      = Templates['dev/templates/layouts/game.hbs'],
+    cardsPartial    = Templates['dev/templates/partials/cards.hbs'],
+    dicePartial     = Templates['dev/templates/partials/dice.hbs'],
+    controlsPartial = Templates['dev/templates/partials/controls.hbs'];
 
+Handlebars.partials.cards     = cardsPartial;
+Handlebars.partials.dice      = dicePartial;
+Handlebars.partials.controls  = controlsPartial;
 
-  function checkAnswer(dice, cards){
-    var diceTotal = _.reduce(_.pluck(dice, 'showing'), 
-          function (memo, num) { return memo + num; },
-        0),
-        flippedCards  = _.where(cards, {flipped: true}),
-        flippedVals   = _.pluck(flippedCards, 'number'),
-        ansTotal = _.reduce(flippedVals, function (memo, num) {return memo + num; });
-    if (ansTotal !== diceTotal) return false;
-    return true;
-  }
+module.exports = function(game){
 
-  function Card(opts) {
-    this.number = opts.number;
-    this.flipped = false;
-    this.flip = function(){
-      this.flipped = !this.flipped;
-    };
-  }
+  function GameView (game) {
+    var self = this;
 
-  function Die(opts) {
-    this.sides    = opts.sides;
-    this.showing  = opts.defSide;
-    this.roll     = function(){
-      this.showing = _.random(1, this.sides);
-    };
-  }
-
-  function Player(opts){
-    this.userName = opts.userName;
-  }
-
-  function Game(opts) {
-    this.cards = this.cards || [];
-    for (var i = 0; i < opts.numberOfCards; i++){
-      this.cards.push(new Card({number: i + 1}));
-    }
-
-    this.dice = this.dice || [];
-    for (var x = 0; x < opts.numberOfDie; x++){
-      this.dice.push(new Die({  sides: opts.dieSides,
-                                defSide: opts.defSide}));
-    }
-
-    this.player = this.player || new Player({userName: opts.userName});
-
-    this.checkAnswer = function(){
-      return checkAnswer(this.dice, this.cards);
+    var gameData = {
+      cardData: {
+        cards: game.cards
+      },
+      diceData: {
+        dice: game.dice
+      }
     };
 
-  }
+    $('body').append(gameLayout(gameData));
 
-  return new Game(options);
+    var cards       =   $('.cards'),
+        dice        =   $('.dice'),
+        controls    =   $('.controls'),
+        rollButton  =   controls.children('#control-roll'),
+        turnButton  =   controls.children('#control-end-turn'),
+        endButton   =   controls.children('#control-end-game');
+
+    endButton.click(function(){
+      self.endGame();
+    });
+
+    this.updateDice = function(diceState){
+      dice.html(dicePartial({dice: diceState}));
+    };
+
+    this.updateCards = function(cardState){
+      cards.html(cardsPartial({cards: cardState}));
+    };
+
+    this.initTurn = function(cards){
+      if (cards){
+        self.updateCards(cards);
+      }
+      rollButton.one('click',function(){
+        radio('rollClick').broadcast();
+      });
+       $('.card').not('.shut').click(function(){
+        card = $( this );
+        radio('cardClick').broadcast(card.text());
+        card.toggleClass('unflipped');
+        card.toggleClass('flipped');
+      });
+      turnButton.on('click', function(){
+        radio('endTurnClick').broadcast();
+      });
+    };
+
+    this.flipCards = function(cardsState){
+      dice.html(cardsPartial({cards: cardsState}));
+    };
+
+    this.endTurn = function(){
+      $('card').off();
+      turnButton.off();
+    };
+
+    this.displayAnswer = function(answer){
+      if (answer === true){
+        alert('you added the numbers right!');
+        self.endTurn();
+      } else if (answer !== undefined) {
+        alert('you were wrong!');
+      }
+    };
+
+    this.endGame = function(){
+      alert("If you rolled the dice and can't shut any boxes, you lose. Otherwise, count up the boxes left and that is your score (low scores are better). To play again refresh the page!");
+    };
+  } 
+
+
+  return new GameView(game);
 
 };
